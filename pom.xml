@@ -707,7 +707,7 @@
     <module>gora-hbase</module>
     <module>gora-infinispan</module>
     <module>gora-jcache</module>
-    <!-- module>gora-lucene</module -->
+    <module>gora-aerospike</module>
     <module>gora-dynamodb</module>
     <module>gora-couchdb</module>
     <!--module>gora-sql</module -->
@@ -748,6 +748,8 @@
     <restlet.version>2.3.1</restlet.version>
 
     <spark.version>1.4.1</spark.version>
+
+    <aerospike.version>3.3.2</aerospike.version>
     <!-- Misc Dependencies -->
     <guava.version>13.0</guava.version>
     <commons-lang.version>2.6</commons-lang.version>
@@ -906,6 +908,12 @@
         <artifactId>gora-dynamodb</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.gora</groupId>
+        <artifactId>gora-aerospike</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <!-- End of Internal Depednecies -->
 
