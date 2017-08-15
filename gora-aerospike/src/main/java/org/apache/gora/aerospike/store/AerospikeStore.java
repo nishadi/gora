@@ -87,7 +87,7 @@ public class AerospikeStore<K, T extends PersistentBase> extends DataStoreBase<K
             .readMappingFile(getConf().get(PARSE_MAPPING_FILE_KEY, DEFAULT_MAPPING_FILE), keyClass,
                     persistentClass);
     aerospikeParameters = new AerospikeParameters(aerospikeMappingBuilder.getAerospikeMapping(),
-            properties);
+            properties, getConf());
     ClientPolicy policy = new ClientPolicy();
     policy.writePolicyDefault = aerospikeParameters.getAerospikeMapping().getWritePolicy();
     policy.readPolicyDefault = aerospikeParameters.getAerospikeMapping().getReadPolicy();
@@ -333,8 +333,7 @@ public class AerospikeStore<K, T extends PersistentBase> extends DataStoreBase<K
   @Override
   public List<PartitionQuery<K, T>> getPartitions(Query<K, T> query) throws IOException {
     List<PartitionQuery<K, T>> partitions = new ArrayList<>();
-    PartitionQueryImpl<K, T> partitionQuery = new PartitionQueryImpl<>(
-            query);
+    PartitionQueryImpl<K, T> partitionQuery = new PartitionQueryImpl<>(query);
     partitionQuery.setConf(getConf());
     partitions.add(partitionQuery);
     return partitions;

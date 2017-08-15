@@ -32,9 +32,8 @@ import org.junit.ClassRule;
 import org.testcontainers.containers.GenericContainer;
 
 import java.time.Duration;
-import java.util.Properties;
 
-public class TestAerospikeStoreWordCount {
+public class TestAerospikeStoreMapReduce {
 
   private static final String DOCKER_CONTAINER_NAME = "aerospike/aerospike-server:latest";
 
@@ -43,24 +42,22 @@ public class TestAerospikeStoreWordCount {
           .withExposedPorts(3000).waitingFor(new AerospikeStartupLogWaitStrategy())
           .withStartupTimeout(Duration.ofSeconds(240));
 
-
   private AerospikeStore<String, WebPage> webPageStore;
-  private AerospikeStore<String, TokenDatum> tokenStore;
-  Configuration conf = new Configuration();
-  private final Properties properties = DataStoreFactory.createProps();
 
+  private AerospikeStore<String, TokenDatum> tokenStore;
+
+  Configuration conf = new Configuration();
 
   @Before
   public void setUp() throws Exception {
 
-    properties.setProperty("gora.aerospikestore.server.ip", "localhost");
-    properties.setProperty("gora.aerospikestore.server.port",
-            aerospikeContainer.getMappedPort(3000).toString());
+    conf.set("gora.aerospikestore.server.ip", "localhost");
+    conf.set("gora.aerospikestore.server.port", aerospikeContainer.getMappedPort(3000).toString());
 
-    webPageStore = DataStoreFactory.createDataStore(
-            AerospikeStore.class, String.class, WebPage.class,conf, properties );
-    tokenStore = DataStoreFactory.createDataStore(AerospikeStore.class,
-            String.class, TokenDatum.class, conf, properties);
+    webPageStore = DataStoreFactory
+            .createDataStore(AerospikeStore.class, String.class, WebPage.class, conf);
+    tokenStore = DataStoreFactory
+            .createDataStore(AerospikeStore.class, String.class, TokenDatum.class, conf);
   }
 
   @After
@@ -70,7 +67,6 @@ public class TestAerospikeStoreWordCount {
   }
 
   @Test
-  @Ignore
   public void testWordCount() throws Exception {
     MapReduceTestUtils.testWordCount(conf, webPageStore, tokenStore);
   }
